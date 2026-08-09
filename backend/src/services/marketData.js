@@ -10,51 +10,9 @@ if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-const YAHOO_BASE = 'https://query1.finance.yahoo.com/v8/finance/chart';
-const COINGECKO_BASE = 'https://api.coingecko.com/api/v3';
+const MarketDataFactory = require('./providers/MarketDataFactory');
 
-// Crypto id map
-const CRYPTO_IDS = {
-  'BTC-USD': 'bitcoin', 'ETH-USD': 'ethereum',
-  'SOL-USD': 'solana',  'BNB-USD': 'binancecoin',
-};
 
-async function fetchYahoo(symbol, range = '3mo', interval = '1d') {
-  try {
-    const url = `${YAHOO_BASE}/${encodeURIComponent(symbol)}?range=${range}&interval=${interval}`;
-    const { data } = await axios.get(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      timeout: 10000,
-    });
-    const result = data.chart.result[0];
-    const timestamps = result.timestamp;
-    const q = result.indicators.quote[0];
-    const meta = result.meta;
-    const rows = timestamps.map((ts, i) => ({
-      date: new Date(ts * 1000).toISOString().split('T')[0],
-      open: q.open[i], high: q.high[i], low: q.low[i],
-      close: q.close[i], volume: q.volume[i] || 0,
-    })).filter(r => r.close != null);
-    return { rows, meta };
-  } catch (e) {
-    console.error(`Yahoo fetch failed for ${symbol}:`, e.message);
-    return { rows: [], meta: {} };
-  }
-}
-
-async function fetchCoinGecko(coinId, days = 90) {
-  try {
-    const url = `${COINGECKO_BASE}/coins/${coinId}/ohlc?vs_currency=usd&days=${days}`;
-    const { data } = await axios.get(url, { timeout: 10000 });
-    return data.map(([ts, open, high, low, close]) => ({
-      date: new Date(ts).toISOString().split('T')[0],
-      open, high, low, close, volume: 0,
-    }));
-  } catch (e) {
-    console.error(`CoinGecko fetch failed for ${coinId}:`, e.message);
-    return [];
-  }
-}
 
 async function getOrFetchOHLCV(symbol, marketType) {
   // Check cache first (last 3 months in DB)
@@ -69,12 +27,8 @@ async function getOrFetchOHLCV(symbol, marketType) {
   // Fetch fresh
   let freshRows = [];
   try {
-    if (marketType === 'crypto' && CRYPTO_IDS[symbol]) {
-      freshRows = await fetchCoinGecko(CRYPTO_IDS[symbol]);
-    } else {
-      const { rows: yr } = await fetchYahoo(symbol);
-      freshRows = yr;
-    }
+    const provider = MarketDataFactory.getProvider(marketType);
+    freshRows = await provider.getOHLCV(symbol);
   } catch (e) {
     console.error(`Fetch failed for ${symbol}, trying Parquet fallback...`);
   }
@@ -176,7 +130,8 @@ async function computeRisk(symbol) {
 
   const closes = ohlcv.map(r => parseFloat(r.close_price || r.close));
   // Use Nifty 50 as benchmark
-  const { rows: benchRows } = await fetchYahoo('^NSEI', '3mo', '1d');
+  const provider = MarketDataFactory.getProvider('equity');
+  const benchRows = await provider.getOHLCV('^NSEI', '3mo', '1d');
   const benchCloses = benchRows.map(r => r.close);
 
   const assetRet = dailyReturns(closes);
@@ -220,4 +175,4 @@ async function getAllAssets() {
   return rows;
 }
 
-module.exports = { getOrFetchOHLCV, computeAndStoreIndicators, computeRisk, getAllAssets, fetchYahoo };
+module.exports = { getOrFetchOHLCV, computeAndStoreIndicators, computeRisk, getAllAssets };

@@ -4,9 +4,16 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 async function nlToFilters(query) {
   const prompt = `You are a financial screener assistant. Convert the user's natural language query into a JSON filter object.
-Available filter fields: rsi_min, rsi_max, pe_min, pe_max, volume_ratio_min, market_type (equity/forex/crypto/metal), sma_signal (golden_cross/death_cross).
+Output must exactly match this structure:
+{
+  "market": "INDIA" | "USA" | "CRYPTO" | "FOREX",
+  "exchange": "NSE" | "BSE" | "NASDAQ" | "NYSE" | null,
+  "filters": [
+    { "indicator": "RSI" | "SMA_20" | "SMA_50" | "RELATIVE_VOLUME" | "PE" | "PRICE", "operator": ">" | "<" | ">=" | "<=" | "==", "value": 123.45 }
+  ]
+}
 User query: "${query}"
-Respond ONLY with valid JSON, no explanation. Example: {"market_type":"equity","rsi_max":30,"pe_max":20}`;
+Respond ONLY with valid JSON, no explanation.`;
 
   const chat = await groq.chat.completions.create({
     model: 'llama3-8b-8192',
@@ -16,8 +23,11 @@ Respond ONLY with valid JSON, no explanation. Example: {"market_type":"equity","
 
   try {
     const text = chat.choices[0].message.content.trim();
-    return JSON.parse(text);
-  } catch {
+    // find json block if any
+    const match = text.match(/\{[\s\S]*\}/);
+    return match ? JSON.parse(match[0]) : JSON.parse(text);
+  } catch (e) {
+    console.error('[AI Service] nlToFilters failed:', e.message);
     return {};
   }
 }

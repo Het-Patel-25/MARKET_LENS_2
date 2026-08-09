@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { AdvancedRealTimeChart } from 'react-ts-tradingview-widgets';
 
@@ -30,7 +31,6 @@ export function TradingChart({ symbol = "BINANCE:BTCUSD", theme = "dark", interv
         locale="en"
         enable_publishing={false}
         backgroundColor="#2F2F2F"
-        gridColor="rgba(255, 255, 255, 0.05)"
         hide_top_toolbar={false}
         hide_legend={false}
         save_image={false}

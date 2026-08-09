@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS assets (
   symbol VARCHAR(50) UNIQUE NOT NULL,
   name VARCHAR(255),
   market_type ENUM('equity','forex','crypto','metal') NOT NULL,
+  exchange VARCHAR(50),
   currency VARCHAR(10) DEFAULT 'INR'
 );
 
@@ -83,24 +84,24 @@ CREATE TABLE IF NOT EXISTS nl_query_log (
 );
 
 -- Seed assets
-INSERT IGNORE INTO assets (symbol, name, market_type, currency) VALUES
-('RELIANCE.NS','Reliance Industries','equity','INR'),
-('TCS.NS','Tata Consultancy Services','equity','INR'),
-('INFY.NS','Infosys','equity','INR'),
-('HDFCBANK.NS','HDFC Bank','equity','INR'),
-('ICICIBANK.NS','ICICI Bank','equity','INR'),
-('WIPRO.NS','Wipro','equity','INR'),
-('BAJFINANCE.NS','Bajaj Finance','equity','INR'),
-('SBIN.NS','State Bank of India','equity','INR'),
-('ADANIENT.NS','Adani Enterprises','equity','INR'),
-('HINDUNILVR.NS','Hindustan Unilever','equity','INR'),
-('EURINR=X','EUR/INR','forex','INR'),
-('USDINR=X','USD/INR','forex','INR'),
-('GBPINR=X','GBP/INR','forex','INR'),
-('JPYINR=X','JPY/INR','forex','INR'),
-('BTC-USD','Bitcoin','crypto','USD'),
-('ETH-USD','Ethereum','crypto','USD'),
-('SOL-USD','Solana','crypto','USD'),
-('BNB-USD','BNB','crypto','USD'),
-('GC=F','Gold Futures','metal','USD'),
-('SI=F','Silver Futures','metal','USD');
+INSERT IGNORE INTO assets (symbol, name, market_type, exchange, currency) VALUES
+('RELIANCE.NS','Reliance Industries','equity','NSE','INR'),
+('TCS.NS','Tata Consultancy Services','equity','NSE','INR'),
+('INFY.NS','Infosys','equity','NSE','INR'),
+('HDFCBANK.NS','HDFC Bank','equity','NSE','INR'),
+('ICICIBANK.NS','ICICI Bank','equity','NSE','INR'),
+('WIPRO.NS','Wipro','equity','NSE','INR'),
+('BAJFINANCE.NS','Bajaj Finance','equity','NSE','INR'),
+('SBIN.NS','State Bank of India','equity','NSE','INR'),
+('ADANIENT.NS','Adani Enterprises','equity','NSE','INR'),
+('HINDUNILVR.NS','Hindustan Unilever','equity','NSE','INR'),
+('EURINR=X','EUR/INR','forex','FOREX','INR'),
+('USDINR=X','USD/INR','forex','FOREX','INR'),
+('GBPINR=X','GBP/INR','forex','FOREX','INR'),
+('JPYINR=X','JPY/INR','forex','FOREX','INR'),
+('BTC-USD','Bitcoin','crypto','CRYPTO','USD'),
+('ETH-USD','Ethereum','crypto','CRYPTO','USD'),
+('SOL-USD','Solana','crypto','CRYPTO','USD'),
+('BNB-USD','BNB','crypto','CRYPTO','USD'),
+('GC=F','Gold Futures','metal','COMEX','USD'),
+('SI=F','Silver Futures','metal','COMEX','USD');

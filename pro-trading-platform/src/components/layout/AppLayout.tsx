@@ -48,6 +48,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="pt-4 pb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Tools
             </div>
+            <NavItem icon={<Search />} label="Screener" active={activeTab === 'Screener'} onClick={() => setActiveTab('Screener')} />
             <NavItem icon={<LineChart />} label="Watchlist" active={activeTab === 'Watchlist'} onClick={() => setActiveTab('Watchlist')} />
             <NavItem icon={<Wallet />} label="Portfolio" active={activeTab === 'Portfolio'} onClick={() => setActiveTab('Portfolio')} />
             <NavItem icon={<Bell />} label="Alerts" active={activeTab === 'Alerts'} onClick={() => setActiveTab('Alerts')} />
@@ -130,7 +131,7 @@ function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNo
           : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
       }`}
     >
-      {React.cloneElement(icon as React.ReactElement, { className: 'w-5 h-5' })}
+      {React.cloneElement(icon as any, { className: 'w-5 h-5' })}
       <span className="text-sm">{label}</span>
     </button>
   );

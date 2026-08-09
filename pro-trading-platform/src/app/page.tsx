@@ -3,6 +3,7 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { TradingChart } from '@/components/chart/TradingChart';
 import { WatchlistModule } from '@/components/modules/WatchlistModule';
+import { ScreenerModule } from '@/components/modules/screener/ScreenerModule';
 import { useDashboardStore } from '@/store/useDashboardStore';
 import { Clock, TrendingUp } from 'lucide-react';
 
@@ -125,6 +126,7 @@ export default function Home() {
     if (activeTab === 'Stocks') return <WatchlistModule category="Stocks" />;
     if (activeTab === 'Crypto') return <WatchlistModule category="Crypto" />;
     if (activeTab === 'Forex') return <WatchlistModule category="Forex" />;
+    if (activeTab === 'Screener') return <ScreenerModule />;
     return renderPlaceholder();
   };
 
