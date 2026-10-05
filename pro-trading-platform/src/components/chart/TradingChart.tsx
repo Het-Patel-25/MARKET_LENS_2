@@ -17,10 +17,12 @@ export function TradingChart({ symbol = "BINANCE:BTCUSD", theme = "dark", interv
     setMounted(true);
   }, []);
 
+  const containerId = `tv_chart_${symbol.replace(/[^a-zA-Z0-9]/g, '')}_${interval}_${Math.random().toString(36).substring(7)}`;
+
   if (!mounted) return <div className="w-full h-full flex items-center justify-center text-muted-foreground animate-pulse">Loading Chart...</div>;
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full" id={containerId + "_wrapper"}>
       <AdvancedRealTimeChart 
         symbol={symbol}
         theme={theme}
@@ -34,7 +36,7 @@ export function TradingChart({ symbol = "BINANCE:BTCUSD", theme = "dark", interv
         hide_top_toolbar={false}
         hide_legend={false}
         save_image={false}
-        container_id="tradingview_chart"
+        container_id={containerId}
       />
     </div>
   );

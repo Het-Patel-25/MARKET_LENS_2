@@ -20,10 +20,10 @@ const OPERATORS = ['>', '<', '>=', '<=', '=='];
 const MARKETS = ['INDIA', 'USA', 'CRYPTO', 'FOREX'];
 
 const QUICK_SCREENS = [
-  { name: 'Oversold', filters: [{ indicator: 'RSI', operator: '<', value: 30 }] },
-  { name: 'Overbought', filters: [{ indicator: 'RSI', operator: '>', value: 70 }] },
-  { name: 'High Volume', filters: [{ indicator: 'RELATIVE_VOLUME', operator: '>', value: 1.5 }] },
-  { name: 'Value', filters: [{ indicator: 'PE', operator: '<', value: 20 }, { indicator: 'PE', operator: '>', value: 0 }] },
+  { name: 'Oversold', filters: [{ indicator: 'RSI', operator: '<', value: 45 }] },
+  { name: 'Overbought', filters: [{ indicator: 'RSI', operator: '>', value: 60 }] },
+  { name: 'High Volume', filters: [{ indicator: 'RELATIVE_VOLUME', operator: '>', value: 1.0 }] },
+  { name: 'Value', filters: [{ indicator: 'PE', operator: '<', value: 25 }, { indicator: 'PE', operator: '>', value: 0 }] },
 ];
 
 export function ScreenerFilters({ onRunScreener, market, setMarket, exchange, setExchange }: ScreenerFiltersProps) {
