@@ -279,7 +279,7 @@ export function SettingsModule() {
         />
         <SettingRow
           label="Backend API"
-          description="http://localhost:5000 — Asset screener"
+          description={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'} — Asset screener`}
           control={
             <span className="flex items-center gap-1.5 text-xs text-warning font-medium">
               <span className="w-2 h-2 rounded-full bg-warning" />

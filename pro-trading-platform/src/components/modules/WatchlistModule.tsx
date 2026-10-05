@@ -10,8 +10,10 @@ export function WatchlistModule({ category = 'All' }: { category?: 'All' | 'Stoc
   const [loading, setLoading] = useState(true);
   const { setActiveSymbol, setActiveTab, watchlist, toggleWatchlist } = useDashboardStore();
 
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
   useEffect(() => {
-    fetch('http://localhost:5000/api/screener/run', {
+    fetch(`${baseUrl}/api/screener/run`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ filters: [] })
@@ -32,7 +34,7 @@ export function WatchlistModule({ category = 'All' }: { category?: 'All' | 'Stoc
       })
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [baseUrl]);
 
   const filteredData = assets.filter(item => {
     // If we are in the main 'Watchlist' view, ONLY show starred items, UNLESS they are searching.
@@ -55,14 +57,14 @@ export function WatchlistModule({ category = 'All' }: { category?: 'All' | 'Stoc
     const symbol = searchTerm.toUpperCase();
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/market/assets', {
+      const res = await fetch(`${baseUrl}/api/market/assets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ symbol, name: symbol, market_type: 'equity' })
       });
       if (res.ok) {
         // Fetch all assets again to update the table
-        const runRes = await fetch('http://localhost:5000/api/screener/run', {
+        const runRes = await fetch(`${baseUrl}/api/screener/run`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ filters: [] })

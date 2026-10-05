@@ -57,6 +57,30 @@ router.get('/assets', (req, res) => {
 });
 
 /**
+ * POST /api/market/assets
+ * Add a custom instrument/asset
+ */
+router.post('/assets', (req, res) => {
+  const { symbol, name, market_type = 'equity', exchange = 'CUSTOM', currency = 'USD' } = req.body;
+  if (!symbol) {
+    return res.status(400).json({ success: false, error: 'symbol is required' });
+  }
+
+  const existing = ASSETS.find((a) => a.symbol.toUpperCase() === symbol.toUpperCase());
+  if (!existing) {
+    ASSETS.push({
+      symbol: symbol.toUpperCase(),
+      name: name || symbol.toUpperCase(),
+      market_type,
+      exchange,
+      currency,
+    });
+  }
+
+  res.json({ success: true, message: 'Asset added successfully' });
+});
+
+/**
  * GET /api/market/quote/:symbol
  * Returns a simulated OHLCV quote for the given symbol.
  */

@@ -12,3 +12,6 @@ data/exports/
 *.log
 .DS_Store
 backend/data/*.parquet
+.next/
+pro-trading-platform/.next/
+build/

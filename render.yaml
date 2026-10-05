@@ -1,0 +1,40 @@
+services:
+  # ── Backend Web Service ───────────────────────────────────────────────
+  - type: web
+    name: marketlens-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Optional external API keys:
+      # - key: NEWS_API_KEY
+      #   sync: false
+      # - key: GEMINI_API_KEY
+      #   sync: false
+      # - key: OPENAI_API_KEY
+      #   sync: false
+
+  # ── Frontend Web Service (Next.js) ───────────────────────────────────
+  - type: web
+    name: marketlens-frontend
+    runtime: node
+    rootDir: pro-trading-platform
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20
+      # Set NEXT_PUBLIC_API_URL to your backend Render URL:
+      # e.g., https://marketlens-backend.onrender.com
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
