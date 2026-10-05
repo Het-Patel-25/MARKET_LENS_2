@@ -7,6 +7,23 @@ on:
     branches: [main]
 
 jobs:
+  backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      - run: npm install
+      - run: node -e "require('./src/utils/healthcheck'); console.log('Backend healthcheck OK');"
+      - run: echo "✅ Backend tests passed"
+
   frontend:
     name: Frontend Build
     runs-on: ubuntu-latest

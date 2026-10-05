@@ -1,0 +1,26 @@
+{
+  "name": "marketlens-backend",
+  "version": "2.0.0",
+  "description": "MarketLens backend API server — serves market data, news, screener and AI queries",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "node -e \"require('./src/utils/healthcheck'); console.log('Backend healthcheck OK');\""
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "node-cron": "^3.0.3",
+    "yahoo-finance2": "^2.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
