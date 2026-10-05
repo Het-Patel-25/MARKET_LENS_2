@@ -7,49 +7,19 @@ on:
     branches: [main]
 
 jobs:
-  backend:
-    name: Backend Tests
+  frontend:
+    name: Frontend Build
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend
+        working-directory: pro-trading-platform
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
-      - run: npm install
-      - run: node -e "require('./src/utils/indicators'); console.log('indicators OK')"
-      - run: echo "✅ Backend lint/test passed"
-
-  ml:
-    name: ML Server Tests
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ml
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install -r requirements.txt
-      - run: python -c "from src.api_server import app; print('ML server import OK')"
-      - run: echo "✅ ML tests passed"
-
-  frontend:
-    name: Frontend Build
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+          cache-dependency-path: pro-trading-platform/package-lock.json
       - run: npm install
       - run: npm run build
       - run: echo "✅ Frontend build passed"
